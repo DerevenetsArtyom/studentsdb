@@ -6,7 +6,6 @@ from django.http import HttpResponse
 
 # Views for Students
 
-
 def students_list(request):
     students = (
         {'id': 1,
@@ -32,6 +31,9 @@ def students_add(request):
 
 def students_edit(request, sid):
     return HttpResponse('<h1>Edit Student %s</h1>' % sid)
+
+def students_journal(request,sid):
+    return HttpResponse('<h1> Student %s in journal</h1>' % sid)
 
 def students_delete(request, sid):
     return HttpResponse('<h1>Delete Student %s</h1>' % sid)
