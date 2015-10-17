@@ -1,12 +1,18 @@
+
+<!--This link was inherited from 'base.html'.Next string do it-->
 {% extends "students/base.html" %}
 
 {% load static from staticfiles %}
 
+<!--Replace text-->
 {% block meta_title %}Список Груп{% endblock meta_title %}
 
 {% block title %}Список Груп{% endblock title %}
 
+<!--Text for current link-->
+
 {% block content %}
+
 
     <a href="{% url "groups_add" %}" class="btn btn-primary">Додати Групу</a>
 
@@ -15,10 +21,8 @@
           <thead>
             <tr>
               <th><a href="#">№</a></th>
-
               <th><a href="#">Назва</a></th>
               <th><a href="#">Староста</a></th>
-
               <th>Дії</th>
             </tr>
           </thead>
