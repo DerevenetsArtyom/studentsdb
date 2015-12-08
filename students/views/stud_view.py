@@ -2,27 +2,19 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-
+from ..models import Student
 
 def students_list(request):
-    students = (
-        {'id': 1,
-        'last_name': u'Деревенець',
-        'first_name': u'Артем',
-        'ticket': 235,
-        'image': 'img/I_am.jpg'},
-        {'id': 2,
-        'last_name': u'Осінній',
-        'first_name': u'Ілля',
-        'ticket': 2123,
-        'image': 'img/Illya.jpg'},
-        {'id': 3,
-        'last_name': u'Панченко',
-        'first_name': u'Роман',
-        'ticket': 223,
-        'image': 'img/Roman.jpg'},
-        )
-    return render(request, 'students/students_list.html',{'students': students})
+    students = Student.objects.all()
+
+    # try to order students list
+    order_by = request.GET.get('order_by', '')
+    if order_by in ('last_name', 'first_name', 'ticket'):
+        students = students.order_by(order_by)
+        if request.GET.get('reverse', '') == '1':
+            students = students.reverse()
+    return render(request, 'students/students_list.html',
+        {'students': students})
 
 def students_add(request):
     return HttpResponse('<h1>Student Add Form</h1>')
