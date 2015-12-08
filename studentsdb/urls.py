@@ -32,7 +32,6 @@ urlpatterns = patterns('',
 
     # Groups urls
 
-
     url(r'^groups/$', 'students.views.groups_view.groups_list', name='groups'),
 
     url(r'^groups/add/$', 'students.views.groups_view.groups_add',    name='groups_add'),
