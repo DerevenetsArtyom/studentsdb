@@ -1,10 +1,10 @@
-
 <!--This link was inherited from 'base.html'.Next string do it-->
 {% extends "students/base.html" %}
 
 {% load static from staticfiles %}
 
 <!--Replace text-->
+
 {% block meta_title %}Список Груп{% endblock meta_title %}
 
 {% block title %}Список Груп{% endblock title %}
@@ -30,8 +30,8 @@
             {% for group in groups %}
             <tr>
               <td>{{ forloop.counter}}</td>
-              <td><a href="{% url "groups_edit" group.id %}">{{ group.name }}</td>
-              <td><a href="{% url "students_edit" group.leader.id %}">{{ group.leader.name}}</td>
+              <td><a href="{% url "groups_edit" group.id %}">{{ group.title }}</td>
+              <td><a href="{% url "students_edit" group.id %}">{{ group.leader}}</td>
               <td>
                 <div class="btn-group">
                   <button type="button" class="btn btn-default dropdown-toggle"
@@ -49,7 +49,10 @@
           </tbody>
         </table>
         <!-- End Students Listing -->
-        
+
+
+
+
         <nav>
           <ul class="pagination">
             <li><a href="#">&laquo;</a></li>
