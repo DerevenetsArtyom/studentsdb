@@ -50,7 +50,6 @@ urlpatterns = patterns('',
                        )
 
 
-
 if DEBUG:
     # serve files from media folder
     urlpatterns += patterns('',

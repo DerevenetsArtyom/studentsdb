@@ -9,6 +9,7 @@ class Student(models.Model):
     class Meta(object):
         verbose_name = u"Студент"
         verbose_name_plural = u"Студенти"
+        ordering = ['last_name']
 
     def __unicode__(self):
         return u"%s %s" % (self.first_name, self.last_name)
