@@ -10,7 +10,7 @@ def groups_list(request):
 
     # try to order group list
     order_by = request.GET.get('order_by', '')
-    if order_by in ('title', 'leader'):
+    if order_by in ('title', 'leader', 'id'):
         groups = groups.order_by(order_by)
         if request.GET.get('reverse', '') == '1':
             groups = groups.reverse()
