@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Django settings for studentsdb project.
 
@@ -107,8 +108,16 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-TEMPLATE_CONTEXT_PROCESSORS =global_settings.TEMPLATE_CONTEXT_PROCESSORS +("django.core.context_processors.request",
+TEMPLATE_CONTEXT_PROCESSORS = global_settings.TEMPLATE_CONTEXT_PROCESSORS + ("django.core.context_processors.request",
                                                                            "studentsdb.context_processors.students_proc",)
+
+
+'''Файли та зображення в полях моделей насправді зберігаються в папці під
+        адресою MEDIA_ROOT, а обслуговуються вони в браузері під адресою MEDIA_URL.
+        Щоб вручну не формувати посилання на зображення, Django ORM підготував
+        властивість “url”, яку можна викликати на полі зображення і воно
+        поверне нам шлях на зображення враховуючи MEDIA_URL налаштування.'''
+
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, '..', 'media')
