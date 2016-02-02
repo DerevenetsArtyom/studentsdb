@@ -86,8 +86,10 @@
           </tbody>
         </table>
         <!-- End Students Listing -->
-        
+
+        <!--'Students' now is Page object and has new methods-->
         {% if students.has_other_pages %}
+        <!--Rename some variables to simplest names-->
         {% with order_by=request.GET.order_by reverse=request.GET.reverse %}
         <nav>
           <ul class="pagination">

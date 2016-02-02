@@ -2,7 +2,9 @@
 
 from django.shortcuts import render
 from django.http import HttpResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
+from django.core.paginator import EmptyPage
+from django.core.paginator import PageNotAnInteger
 from ..models.student import Student
 
 
@@ -23,10 +25,14 @@ def students_list(request):
         if request.GET.get('reverse', '') == '1':
             students = students.reverse()
 
-    # paginate students
-    paginator = Paginator(students, 3)
+    # PAGINATE STUDENTS
+    # Paginator class instance
+    paginator = Paginator(students, 3)  # Show 3 contacts per page
+    # get parameter 'page' from request
     page = request.GET.get('page')
     try:
+        # method gets a number and
+        # returns object Page ~ list of elements
         students = paginator.page(page)
     except PageNotAnInteger:
         # If page is not an integer, deliver first page.
