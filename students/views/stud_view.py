@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.paginator import Paginator
@@ -26,6 +25,7 @@ def students_list(request):
             students = students.reverse()
 
     # PAGINATE STUDENTS
+
     # Paginator class instance
     paginator = Paginator(students, 3)  # Show 3 contacts per page
     # get parameter 'page' from request
@@ -41,18 +41,21 @@ def students_list(request):
         # If page is out of range (e.g. 9999), deliver last page of results.
         students = paginator.page(paginator.num_pages)
 
-
     return render(request, 'students/students_list.html',
         {'students': students})
+
 
 def students_add(request):
     return HttpResponse('<h1>Student Add Form</h1>')
 
+
 def students_edit(request, sid):
     return HttpResponse('<h1>Edit Student %s</h1>' % sid)
 
-def students_journal(request,sid):
+
+def students_journal(request, sid):
     return HttpResponse('<h1> Student %s in journal</h1>' % sid)
+
 
 def students_delete(request, sid):
     return HttpResponse('<h1>Delete Student %s</h1>' % sid)
