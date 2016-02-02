@@ -10,9 +10,16 @@ def students_list(request):
     # select all students from DB
     students = Student.objects.all()
     # try to order students list
-    order_by = request.GET.get('order_by', '')
-    if order_by in ('last_name', 'first_name', 'ticket', 'id'):
-        students = students.order_by(order_by)
+
+    # Check if we get fey from GET dict
+    order_by_key = request.GET.get('order_by', '')
+    # Check if our key is among correspond keys for sorting
+    # Else - just ignore it
+    if order_by_key in ('last_name', 'first_name', 'ticket', 'id'):
+        # Return QuerySet ordering by one of corresponding keys
+        students = students.order_by(order_by_key)
+        # in case if we click field again
+        # it will be reverse
         if request.GET.get('reverse', '') == '1':
             students = students.reverse()
 
