@@ -49,9 +49,13 @@
           <tbody>
             {% for group in groups %}
             <tr>
-              <td>{{ forloop.counter}}</td>
+              <td>{{ forloop.counter0|add:groups.start_index }}</td>
               <td><a href="{% url "groups_edit" group.id %}">{{ group.title }}</td>
-              <td><a href="{% url "students_edit" group.id %}">{{ group.leader}}</td>
+              <td><a href="{% url "students_edit" group.id %}">
+                  {% if group.leader == None %} Нема старости
+                  {% else %} {{ group.leader }}
+                  {% endif %}
+              </td>
               <td>
                 <div class="btn-group">
                   <button type="button" class="btn btn-default dropdown-toggle"
