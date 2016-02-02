@@ -18,8 +18,8 @@ from django.contrib import admin
 from .settings import MEDIA_ROOT, DEBUG
 
 urlpatterns = patterns('',
-    # Students urls
 
+    # Students urls
     url(r'^$', 'students.views.stud_view.students_list', name='home'),
 
     url(r'^students/add/$', 'students.views.stud_view.students_add',name='students_add'),
@@ -31,7 +31,6 @@ urlpatterns = patterns('',
     url(r'^students/(?P<sid>\d+)/journal/$', 'students.views.stud_view.students_journal', name='students_journal'),
 
     # Groups urls
-
     url(r'^groups/$', 'students.views.groups_view.groups_list', name='groups'),
 
     url(r'^groups/add/$', 'students.views.groups_view.groups_add',    name='groups_add'),
@@ -41,7 +40,6 @@ urlpatterns = patterns('',
     url(r'^groups/(?P<gid>\d+)/delete/$',    'students.views.groups_view.groups_delete',    name='groups_delete'),
 
     # Journal urls
-
     url(r'^journal/$', 'students.views.journal_view.journal', name='journal'),
 
 
