@@ -12,37 +12,37 @@
     {% csrf_token %}
     <div>
         <label for="first_name">Ім'я*</label>
-        <input type="text" value="" name="first_name" id="first_name" />
+        <input type="text" value="{{ request.POST.first_name }}" name="first_name" id="first_name" />
         <span>{{ errors.first_name }}</span>
     </div>
 
     <div>
         <label for="last_name">Прізвище*</label>
-        <input type="text" value="" name="last_name" id="last_name" />
+        <input type="text" value="{{ request.POST.last_name }}" name="last_name" id="last_name" />
         <span>{{ errors.last_name }}</span>
     </div>
 
     <div>
         <label for="middle_name">По-батькові</label>
-        <input type="text" value="" name="middle_name" id="middle_name" />
+        <input type="text" value="{{ request.POST.middle_name }}" name="middle_name" id="middle_name" />
         <span>{{ errors.middle_name }}</span>
     </div>
 
     <div>
         <label for="birthday">Дата Народження*</label>
-        <input type="text" value="" name="birthday" id="birthday" />
+        <input type="text" value="{{ request.POST.birthday }}" name="birthday" id="birthday" />
         <span>{{ errors.birthday }}</span>
     </div>
 
     <div>
         <label for="photo">Фото</label>
-        <input type="file" value="" name="photo" id="photo" />
+        <input type="file" value="{{ request.FILES.photo }}" name="photo" id="photo" />
         <span>{{ errors.photo }}</span>
     </div>
 
     <div>
         <label for="ticket">Білет*</label>
-        <input type="text" value="" name="ticket" id="ticket" />
+        <input type="text" value="{{ request.POST.ticket }}" name="ticket" id="ticket" />
         <span>{{ errors.ticket }}</span>
     </div>
 
@@ -51,7 +51,8 @@
             <select name="student_group" id="student_group">
             <option value="">Виберіть групу</option>
             {% for group in groups %}
-                <option value="{{ group.id }}">{{ group.title }}</option>
+                <option value="{{ group.id }}" {% if group.id == request.POST.student_group|add:0 %}
+                        selected="1"{% endif %}>{{ group.title }}</option>
             {% endfor %}
             </select>
             <span>{{ errors.student_group }}</span>
