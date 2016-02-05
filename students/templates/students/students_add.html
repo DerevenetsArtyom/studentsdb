@@ -9,6 +9,7 @@
 {% block content %}
 <form action="{% url "students_add" %}" method="post"
     enctype="multipart/form-data">
+    {% csrf_token %}
     <div>
         <label for="first_name">Ім'я</label>
         <input type="text" value="" name="first_name" id="first_name" />
