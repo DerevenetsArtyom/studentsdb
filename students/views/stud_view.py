@@ -1,10 +1,11 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from ..models.student import Student
+from ..models.group import Group
 
 
 def students_list(request):
@@ -46,7 +47,42 @@ def students_list(request):
 
 
 def students_add(request):
-    return HttpResponse('<h1>Student Add Form</h1>')
+    # was form posted?
+    # We use POST method for sending form to the server
+    if request.method == "POST":
+        # was form add button clicked?
+        if request.POST.get('add_button') is not None:  # field 'name' at button
+            # TODO: validate input from user
+            # Stack for errors
+            errors = {}
+            if not errors:  # dict is empty
+                # create student object
+                # get all fields from request.POST (dict)
+                student = Student(
+                    first_name=request.POST['first_name'],
+                    last_name=request.POST['last_name'],
+                    middle_name=request.POST['middle_name'],
+                    birthday=request.POST['birthday'],
+                    ticket=request.POST['ticket'],
+                    student_group=Group.objects.get(pk=request.POST['student_group']),
+                    photo=request.FILES['photo'],
+                )
+                # save it to database
+                student.save()
+                # redirect user to students list
+                return redirect('home')
+            else:
+                # render form with errors and previous user input
+                return render(request, 'students/students_add.html',
+                    {'groups': Group.objects.all().order_by('title'),
+                    'errors': errors})
+        elif request.POST.get('cancel_button') is not None:
+            # redirect to home page on cancel button
+            return redirect('home')
+    else:
+        # initial form render
+        return render(request, 'students/students_add.html',
+                {'groups': Group.objects.all().order_by('title')})
 
 
 def students_edit(request, sid):
