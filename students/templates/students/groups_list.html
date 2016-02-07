@@ -4,18 +4,17 @@
 {% load static from staticfiles %}
 
 <!--Replace text-->
+{% block meta_title %}
+    Список Груп
+{% endblock meta_title %}
 
-{% block meta_title %}Список Груп{% endblock meta_title %}
+{% block title %}
+    Список Груп
+{% endblock title %}
 
-{% block title %}Список Груп{% endblock title %}
-
-<!--Text for current link-->
 
 {% block content %}
-
-
     <a href="{% url "groups_add" %}" class="btn btn-primary">Додати Групу</a>
-
         <!-- Start Students Listing -->
         <table class="table table-striped">
           {% with order_by=request.GET.order_by reverse=request.GET.reverse%}

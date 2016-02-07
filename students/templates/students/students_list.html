@@ -1,13 +1,18 @@
+<!--This link was inherited from 'base.html'.Next string do it-->
 {% extends "students/base.html" %}
 
 {% load static from staticfiles %}
 
-{% block meta_title %}Студенти{% endblock meta_title %}
+<!--Replace text-->
+{% block meta_title %}
+    Студенти
+{% endblock meta_title %}
 
-{% block title %}База Студентів{% endblock title %}
+{% block title %}
+    База Студентів
+{% endblock title %}
 
 {% block content %}
-
     <a href="{% url "students_add" %}" class="btn btn-primary">Додати Студента</a>
 
         <!-- Start Students Listing -->

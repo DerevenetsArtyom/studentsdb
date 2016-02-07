@@ -1,25 +1,31 @@
+<!--This link was inherited from 'base.html'.Next string do it-->
 {% extends "students/base.html" %}
 
 {% load static from staticfiles %}
 
-{% block meta_title %}Додати студента{% endblock meta_title %}
+<!--Replace text-->
+{% block meta_title %}
+    Додати студента
+{% endblock meta_title %}
 
-{% block title %}Додати студента{% endblock title %}
+{% block title %}
+    Додати студента
+{% endblock title %}
 
 {% block content %}
 <form action="{% url "students_add" %}" method="post"
     enctype="multipart/form-data">
     {% csrf_token %}
     <div>
-        <label for="first_name">Ім'я*</label>
-        <input type="text" value="{{ request.POST.first_name }}" name="first_name" id="first_name" />
-        <span>{{ errors.first_name }}</span>
-    </div>
-
-    <div>
         <label for="last_name">Прізвище*</label>
         <input type="text" value="{{ request.POST.last_name }}" name="last_name" id="last_name" />
         <span>{{ errors.last_name }}</span>
+    </div>
+
+    <div>
+        <label for="first_name">Ім'я*</label>
+        <input type="text" value="{{ request.POST.first_name }}" name="first_name" id="first_name" />
+        <span>{{ errors.first_name }}</span>
     </div>
 
     <div>
