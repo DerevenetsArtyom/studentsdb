@@ -13,8 +13,8 @@
 {% endblock title %}
 
 {% block content %}
-<form action="{% url "students_add" %}" method="post"
-    enctype="multipart/form-data">
+<form action="{% url "students_add" %}" method="post" enctype="multipart/form-data">
+    <!--Sort of protection-->
     {% csrf_token %}
     <div>
         <label for="last_name">Прізвище*</label>
@@ -42,8 +42,8 @@
 
     <div>
         <label for="photo">Фото</label>
-        <input type="file" value="{{ request.FILES.photo }}" name="photo" id="photo" />
         <span>{{ errors.photo }}</span>
+        <input type="file" value="{{ request.FILES.photo }}" name="photo" id="photo" />
     </div>
 
     <div>
@@ -55,11 +55,11 @@
     <div>
         <label for="student_group">Група*</label>
             <select name="student_group" id="student_group">
-            <option value="">Виберіть групу</option>
-            {% for group in groups %}
-                <option value="{{ group.id }}" {% if group.id == request.POST.student_group|add:0 %}
-                        selected="1"{% endif %}>{{ group.title }}</option>
-            {% endfor %}
+                <option value="">Виберіть групу</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if group.id == request.POST.student_group|add:0 %}
+                            selected="1"{% endif %}>{{ group.title }}</option>
+                {% endfor %}
             </select>
             <span>{{ errors.student_group }}</span>
     </div>

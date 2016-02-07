@@ -102,7 +102,12 @@ def students_add(request):
                     data['student_group'] = groups[0]
             # photo
             photo = request.FILES.get('photo')
-            if photo:
+
+            if photo.size > 2*(10**6):  # File  > 2 Megabytes
+                errors['photo'] = u"Розміp файлу більше 2 Мб"
+            elif 'image' not in photo.content_type:  # File is not image
+                errors['photo'] = u"Файл не є зображенням"
+            else:
                 data['photo'] = photo
 
             if not errors:  # dict is empty
