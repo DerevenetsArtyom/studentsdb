@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
@@ -102,20 +103,20 @@ def students_add(request):
                     data['student_group'] = groups[0]
             # photo
             photo = request.FILES.get('photo')
-
-            if photo.size > 2*(10**6):  # File  > 2 Megabytes
-                errors['photo'] = u"Розміp файлу більше 2 Мб"
-            elif 'image' not in photo.content_type:  # File is not image
-                errors['photo'] = u"Файл не є зображенням"
-            else:
-                data['photo'] = photo
+            if photo:
+                if photo.size > 2*(10**6):  # File  > 2 Megabytes
+                    errors['photo'] = u"Розміp файлу більше 2 Мб"
+                elif 'image' not in photo.content_type:  # File is not image
+                    errors['photo'] = u"Файл не є зображенням"
+                else:
+                    data['photo'] = photo
 
             if not errors:  # dict is empty
                 # create student object
                 student = Student(**data)  # Unpacking data dict
                 student.save()
                 # redirect user to students list
-                return redirect('home')
+                return HttpResponseRedirect(u'%s?status_message=Студента успiшно додано!' % reverse('home'))
             else:
                 # render form with errors and previous user input
                 return render(request, 'students/students_add.html',
@@ -123,7 +124,7 @@ def students_add(request):
                        'errors': errors})
         elif request.POST.get('cancel_button') is not None:
             # redirect to home page on cancel button
-            return redirect('home')
+            return HttpResponseRedirect(u'%s?status_message=Додавання студента скасовано!' % reverse('home'))
     else:
         # initial form render
         return render(request, 'students/students_add.html',
