@@ -49,7 +49,7 @@ def students_list(request):
 
 
 def students_add(request):
-    # was form posted?
+    # Was form posted?
     # We use POST method for sending form to the server
     if request.method == "POST":
         # was form add button clicked?
@@ -104,7 +104,7 @@ def students_add(request):
             # photo
             photo = request.FILES.get('photo')
             if photo:
-                if photo.size > 2*(10**6):  # File  > 2 Megabytes
+                if photo.size > 2*(10**6):  # File is greater than 2 MegaBytes
                     errors['photo'] = u"Розміp файлу більше 2 Мб"
                 elif 'image' not in photo.content_type:  # File is not image
                     errors['photo'] = u"Файл не є зображенням"
@@ -112,19 +112,23 @@ def students_add(request):
                     data['photo'] = photo
 
             if not errors:  # dict is empty
-                # create student object
+                # create correct student object
+                curr_st = u'%s %s' % (first_name, last_name)
                 student = Student(**data)  # Unpacking data dict
-                student.save()
+                student.save()  # Save in DB
                 # redirect user to students list
-                return HttpResponseRedirect(u'%s?status_message=Студента успiшно додано!' % reverse('home'))
+                # with correspond status message in URL and at page
+                return HttpResponseRedirect(
+                    u'%s?status_message=Студента %s успiшно додано!' % (reverse('home'), curr_st))
             else:
                 # render form with errors and previous user input
                 return render(request, 'students/students_add.html',
                        {'groups': Group.objects.all().order_by('title'),
                        'errors': errors})
-        elif request.POST.get('cancel_button') is not None:
+        elif request.POST.get('cancel_button') is not None:  # User click to CANCEL
             # redirect to home page on cancel button
-            return HttpResponseRedirect(u'%s?status_message=Додавання студента скасовано!' % reverse('home'))
+            return HttpResponseRedirect(
+                u'%s?status_message=Додавання студента скасовано!' % reverse('home'))
     else:
         # initial form render
         return render(request, 'students/students_add.html',
