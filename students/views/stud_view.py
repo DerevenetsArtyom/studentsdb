@@ -7,6 +7,7 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
+from django.views.generic import UpdateView
 
 from ..models.student import Student
 from ..models.group import Group
@@ -137,7 +138,21 @@ def students_add(request):
                 {'groups': Group.objects.all().order_by('title')})
 
 
+class StudentUpdateView(UpdateView):
+    model = Student
+    template_name = 'students/students_edit.html'
+    fields = '__all__'
 
+    def get_success_url(self):
+        return u'%s?status_message=Студента успiшно збережено!' % reverse('home')
+
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            return HttpResponseRedirect(
+                u'%s?status_message=Редагування студента вiдмiнено!' % reverse('home')
+            )
+        else:
+            return super(StudentUpdateView, self).post(request, *args, **kwargs)
 
 
 def students_edit(request, sid):
