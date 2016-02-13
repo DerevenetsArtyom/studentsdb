@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from datetime import datetime
+
 from ..models.student import Student
 from ..models.group import Group
 
@@ -133,6 +135,9 @@ def students_add(request):
         # initial form render
         return render(request, 'students/students_add.html',
                 {'groups': Group.objects.all().order_by('title')})
+
+
+
 
 
 def students_edit(request, sid):

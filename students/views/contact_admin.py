@@ -34,27 +34,29 @@ class ContactForm(forms.Form):
         self.helper.add_input(Submit('send_button', u'Надіслати'))
 
     from_email = forms.EmailField(label=u'Ваша Емейл Адреса')
-    subject = forms.CharField(label=u'ЗАголовок Листа',max_length = 128)
+    subject = forms.CharField(label=u'Заголовок Листа', max_length = 128)
     message = forms.CharField(
         label=u'Текст повiдомлення',
         max_length=2560,
         widget=forms.Textarea)
 
+
 def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':
-        # create a form instance and populate it with data from the  request:
+        # create a form instance and populate it with data from the request:
         form = ContactForm(request.POST)
         # check whether user data is valid:
         if form.is_valid():
             # send email
+            # CLEANED_DATA already keeps data in appropriate view
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             from_email = form.cleaned_data['from_email']
             try:
                 send_mail(subject, message, from_email, [ADMIN_EMAIL])
             except Exception:
-                message = u'Під час відправки листа виникла непередбачуванапомилка. ' \
+                message = u'Під час відправки листа виникла непередбачува напомилка.' \
                           u'Спробуйте скористатись даною формою пізніше.'
             else:
                 message = u'Повідомлення успішно надіслане!'
