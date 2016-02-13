@@ -18,7 +18,7 @@ from django.contrib import admin
 
 from .settings import MEDIA_ROOT, DEBUG
 
-from students.views.stud_view import StudentUpdateView
+from students.views.stud_view import StudentUpdateView, StudentDeleteView
 
 
 urlpatterns = patterns('',
@@ -26,11 +26,9 @@ urlpatterns = patterns('',
     # Students urls
     url(r'^$', 'students.views.stud_view.students_list', name='home'),
 
-    url(r'^students/add/$', 'students.views.stud_view.students_add',name='students_add'),
+    url(r'^students/add/$', 'students.views.stud_view.students_add', name='students_add'),
 
-    #url(r'^students/(?P<sid>\d+)/edit/$', 'students.views.stud_view.students_edit', name='students_edit'),
-
-    url(r'^students/(?P<sid>\d+)/delete/$',    'students.views.stud_view.students_delete',    name='students_delete'),
+    url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
 
     url(r'^students/(?P<sid>\d+)/journal/$', 'students.views.stud_view.students_journal', name='students_journal'),
 
