@@ -1,0 +1,38 @@
+<!--This link was inherited from 'base.html'.Next string do it-->
+{% extends "students/base.html" %}
+
+{% load static from staticfiles %}
+
+<!--Replace text-->
+{% block meta_title %}
+    Редагувати студента
+{% endblock meta_title %}
+
+{% block title %}
+    Редагувати студента
+{% endblock title %}
+
+{% block status_message %}
+  {% if errors %}
+    <div class="alert alert-warning" role="alert">
+        Будь ласка виправте наступнi помилки
+    </div>
+  {% endif %}
+{% endblock %}
+
+
+{% block content %}
+<form action="{% url "students_edit" object.id %}" method="post" enctype="multipart/form-data"
+    class="form-horizontal">
+    {% csrf_token %} <!--Sort of protection-->
+
+    {{ form.as_p }}
+
+    <input type="submit" name="add_button" value="Зберегти"
+        class="btn btn-primary" />
+    <button type="submit" name="cancel_button" value="Скасувати"
+        class="btn btn-link">Скасувати</button>
+
+</form>
+
+{% endblock content %}
