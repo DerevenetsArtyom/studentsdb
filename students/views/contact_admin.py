@@ -38,7 +38,7 @@ class ContactForm(forms.Form):
     message = forms.CharField(
         label=u'Текст повiдомлення',
         max_length=2560,
-        widget=forms.Textarea)
+        widget=forms.Textarea(attrs={'rows': 5, 'cols': 5}))
 
 
 def contact_admin(request):

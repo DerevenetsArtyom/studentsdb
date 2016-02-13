@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
 from django.views.generic import UpdateView
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 
 # Crispy forms for fronnt end (Bootstrap)
 from crispy_forms.helper import FormHelper
@@ -148,6 +148,9 @@ class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
         fields = '__all__'
+        widgets = {
+            'notes': Textarea(attrs={'rows': 5, 'cols': 5}),
+        }
 
     def __init__(self, *args, **kwargs):
         super(StudentUpdateForm, self).__init__(*args, **kwargs)
@@ -188,10 +191,6 @@ class StudentUpdateView(UpdateView):
             )
         else:
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
-
-
-def students_edit(request, sid):
-    return HttpResponse('<h1>Edit Student %s</h1>' % sid)
 
 
 def students_journal(request, sid):
