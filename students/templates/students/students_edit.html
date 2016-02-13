@@ -2,6 +2,7 @@
 {% extends "students/base.html" %}
 
 {% load static from staticfiles %}
+{% load crispy_forms_tags %}
 
 <!--Replace text-->
 {% block meta_title %}
@@ -22,17 +23,7 @@
 
 
 {% block content %}
-<form action="{% url "students_edit" object.id %}" method="post" enctype="multipart/form-data"
-    class="form-horizontal">
-    {% csrf_token %} <!--Sort of protection-->
 
-    {{ form.as_p }}
-
-    <input type="submit" name="add_button" value="Зберегти"
-        class="btn btn-primary" />
-    <button type="submit" name="cancel_button" value="Скасувати"
-        class="btn btn-link">Скасувати</button>
-
-</form>
+{% crispy form %}
 
 {% endblock content %}
