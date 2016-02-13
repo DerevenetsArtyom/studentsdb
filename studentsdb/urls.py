@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
+
 from .settings import MEDIA_ROOT, DEBUG
+
+from students.views.stud_view import StudentUpdateView
+
 
 urlpatterns = patterns('',
 
@@ -24,11 +28,13 @@ urlpatterns = patterns('',
 
     url(r'^students/add/$', 'students.views.stud_view.students_add',name='students_add'),
 
-    url(r'^students/(?P<sid>\d+)/edit/$', 'students.views.stud_view.students_edit', name='students_edit'),
+    #url(r'^students/(?P<sid>\d+)/edit/$', 'students.views.stud_view.students_edit', name='students_edit'),
 
     url(r'^students/(?P<sid>\d+)/delete/$',    'students.views.stud_view.students_delete',    name='students_delete'),
 
     url(r'^students/(?P<sid>\d+)/journal/$', 'students.views.stud_view.students_journal', name='students_journal'),
+
+    url(r'^students/(?P<pk>\d+)/edit/$', StudentUpdateView.as_view(), name='students_edit'),
 
     # Groups urls
     url(r'^groups/$', 'students.views.groups_view.groups_list', name='groups'),
