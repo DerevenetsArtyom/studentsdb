@@ -7,8 +7,9 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, DeleteView
 from django.forms import ModelForm, Textarea
+from django.contrib import messages
 
 # Crispy forms for fronnt end (Bootstrap)
 from crispy_forms.helper import FormHelper
@@ -122,13 +123,12 @@ def students_add(request):
 
             if not errors:  # dict is empty
                 # create correct student object
-                curr_st = u'%s %s' % (first_name, last_name)
                 student = Student(**data)  # Unpacking data dict
                 student.save()  # Save in DB
                 # redirect user to students list
                 # with correspond status message in URL and at page
-                return HttpResponseRedirect(
-                    u'%s?status_message=Студента %s успiшно додано!' % (reverse('home'), curr_st))
+                messages.success(request, u'Студента %s успiшно додано!' %  student)
+                return HttpResponseRedirect(reverse('home'))
             else:
                 # render form with errors and previous user input
                 return render(request, 'students/students_add.html',
@@ -136,8 +136,9 @@ def students_add(request):
                        'errors': errors})
         elif request.POST.get('cancel_button') is not None:  # User click to CANCEL
             # redirect to home page on cancel button
-            return HttpResponseRedirect(
-                u'%s?status_message=Додавання студента скасовано!' % reverse('home'))
+            messages.warning(request, u'Додавання студента вiдмiнено!')
+            return HttpResponseRedirect(reverse('home'))
+
     else:
         # initial form render
         return render(request, 'students/students_add.html',
@@ -152,6 +153,7 @@ class StudentUpdateForm(ModelForm):
             'notes': Textarea(attrs={'rows': 5, 'cols': 5}),
         }
 
+    # use crispy forms
     def __init__(self, *args, **kwargs):
         super(StudentUpdateForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
@@ -180,22 +182,29 @@ class StudentUpdateView(UpdateView):
     model = Student
     template_name = 'students/students_edit.html'
     form_class = StudentUpdateForm
+    success_url = '/'
 
     def get_success_url(self):
-        return u'%s?status_message=Студента успiшно збережено!' % reverse('home')
+        return reverse('home')
 
-    def post(self, request, *args, **kwargs):
-        if request.POST.get('cancel_button'):
-            return HttpResponseRedirect(
-                u'%s?status_message=Редагування студента вiдмiнено!' % reverse('home')
-            )
-        else:
-            return super(StudentUpdateView, self).post(request, *args, **kwargs)
+    # def post(self, request, *args, **kwargs):
+    #     if request.POST.get('cancel_button'):
+    #         messages.success(self.request, u'Редагування студента вiдмiнено!')
+    #         return HttpResponseRedirect(reverse('home'))
+    #     else:
+    #         return super(StudentUpdateView, self).post(request, *args, **kwargs)
+
+
+class StudentDeleteView(DeleteView):
+    model = Student
+    template_name = 'students/students_confirm_delete.html'
+
+    def get_success_url(self):
+        messages.info(self.request, u'Студента успiшно видалено!')
+        return reverse('home')
+
 
 
 def students_journal(request, sid):
     return HttpResponse('<h1> Student %s in journal</h1>' % sid)
 
-
-def students_delete(request, sid):
-    return HttpResponse('<h1>Delete Student %s</h1>' % sid)
