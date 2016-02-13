@@ -58,14 +58,14 @@
     <div class="row" id="content-columns">
       <div class="col-xs-12" id="content-column">
 
-          <!--Status message-->
           {% block status_message %}
-              <!--if status_message in request-->
-              {% if request.GET.status_message %}
-                <div class="alert alert-warning" role="alert">{{ request.GET.status_message }}</div>
-              {% endif %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{% if message.tags == 'error' %}danger
+                      {% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}</div>
+                {% endfor %}
+            {% endif %}
           {% endblock %}
-          <!--End status message  -->
 
     <!--Start different content -->
         <h2>{% block title %}{% endblock title %}</h2>
