@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
-#  from studentsdb.settings import ADMIN_EMAIL
+# crispy_forms for front-end ( bootstrap)
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
@@ -49,7 +49,7 @@ def contact_admin(request):
         # check whether user data is valid:
         if form.is_valid():
             # send email
-            # CLEANED_DATA already keeps data in appropriate view
+            # form.cleaned_data  already keeps data in appropriate view
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             from_email = form.cleaned_data['from_email']
@@ -63,7 +63,7 @@ def contact_admin(request):
                 # redirect to same contact page with success message
             return HttpResponseRedirect(
                     u'%s?status_message=%s' % (reverse('contact_admin'), message))
-    # if there was not POST render blank form
+    # if a GET (or any other method) we'll create a blank form
     else:
         form = ContactForm()
     return render(request, 'contact_admin/form.html', {'form': form})
