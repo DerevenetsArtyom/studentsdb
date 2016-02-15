@@ -148,10 +148,12 @@ def students_add(request):
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
-        fields = '__all__'
+        fields = ('last_name', 'first_name', 'middle_name', 'student_group',
+                  'birthday', 'photo', 'ticket', 'notes')
         widgets = {
             'notes': Textarea(attrs={'rows': 5, 'cols': 5}),
         }
+        template_name = 'students/students_edit.html'
 
     # use crispy forms
     def __init__(self, *args, **kwargs):
@@ -172,27 +174,27 @@ class StudentUpdateForm(ModelForm):
         self.helper.field_class = 'col-sm-10'
 
         # add buttons
-        self.helper.layout[-1] = FormActions(
+        self.helper.layout.append(FormActions(
                 Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
                 Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
-                )
+                ))
 
 
 class StudentUpdateView(UpdateView):
     model = Student
     template_name = 'students/students_edit.html'
     form_class = StudentUpdateForm
-    success_url = '/'
 
     def get_success_url(self):
+        messages.success(self.request, u'Редагування студента успішне!')
         return reverse('home')
 
-    # def post(self, request, *args, **kwargs):
-    #     if request.POST.get('cancel_button'):
-    #         messages.success(self.request, u'Редагування студента вiдмiнено!')
-    #         return HttpResponseRedirect(reverse('home'))
-    #     else:
-    #         return super(StudentUpdateView, self).post(request, *args, **kwargs)
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            messages.success(self.request, u'Редагування студента вiдмiнено!')
+            return HttpResponseRedirect(reverse('home'))
+        else:
+            return super(StudentUpdateView, self).post(request, *args, **kwargs)
 
 
 class StudentDeleteView(DeleteView):
