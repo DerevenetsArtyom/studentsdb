@@ -4,6 +4,7 @@ from django import forms
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.views.generic.edit import FormView
 
 # crispy_forms for front-end ( bootstrap)
 from crispy_forms.helper import FormHelper
@@ -41,7 +42,8 @@ class ContactForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 5, 'cols': 5}))
 
 
-def contact_admin(request):
+#   FUNCTION VIEW FOR CONTACT ADMIN
+'''def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -49,7 +51,7 @@ def contact_admin(request):
         # check whether user data is valid:
         if form.is_valid():
             # send email
-            # form.cleaned_data  already keeps data in appropriate view
+            # form.cleaned_data already keeps data in appropriate view
             subject = form.cleaned_data['subject']
             message = form.cleaned_data['message']
             from_email = form.cleaned_data['from_email']
@@ -66,4 +68,11 @@ def contact_admin(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = ContactForm()
-    return render(request, 'contact_admin/form.html', {'form': form})
+    return render(request, 'contact_admin/form.html', {'form': form})'''
+
+
+class ContactView(FormView):
+    template_name = 'contact_admin/form.html'
+    form_class = ContactForm
+
+

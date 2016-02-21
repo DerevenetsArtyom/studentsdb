@@ -7,9 +7,10 @@ from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator
 from django.core.paginator import EmptyPage
 from django.core.paginator import PageNotAnInteger
-from django.views.generic import UpdateView, DeleteView
+from django.views.generic import UpdateView, DeleteView, CreateView
 from django.forms import ModelForm, Textarea
 from django.contrib import messages
+from django import forms
 
 # Crispy forms for fronnt end (Bootstrap)
 from crispy_forms.helper import FormHelper
@@ -20,6 +21,7 @@ from ..models.student import Student
 from ..models.group import Group
 
 
+# List of student with ordering and pagination
 def students_list(request):
     # select all students from DB
     students = Student.objects.all()
@@ -58,6 +60,7 @@ def students_list(request):
         {'students': students})
 
 
+# Add student manually
 def students_add(request):
     # Was form posted?
     # We use POST method for sending form to the server
@@ -138,11 +141,68 @@ def students_add(request):
             # redirect to home page on cancel button
             messages.warning(request, u'Додавання студента вiдмiнено!')
             return HttpResponseRedirect(reverse('home'))
-
     else:
         # initial form render
         return render(request, 'students/students_add.html',
                 {'groups': Group.objects.all().order_by('title')})
+
+
+# Add student using ModelForm
+class StudentAddForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = ('last_name', 'first_name', 'middle_name', 'student_group',
+                  'birthday', 'photo', 'ticket', 'notes')
+        widgets = {
+            'notes': Textarea(attrs={'rows': 5, 'cols': 5}),
+        }
+        template_name = 'students/students_add.html'
+
+    # use crispy forms
+    def __init__(self, *args, **kwargs):
+        super(StudentAddForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+
+        # set form tag attributes
+
+        # self.helper.form_action = reverse('students_add',
+        #     kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_method = 'POST'
+        self.helper.form_class = 'form-horizontal'
+
+        # set form field properties
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.label_class = 'col-sm-2 control-label'
+        self.helper.field_class = 'col-sm-10'
+
+        # add buttons
+        self.helper.layout.append(FormActions(
+                Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
+                Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+                ))
+
+
+# CBV for adding student (use StudentAddForm)
+class StudentAddView(CreateView):  # inherits from generic CreateView
+    model = Student  # Required. Our model we are working with
+    template_name = 'students/students_add.html'  # Path to the template for edit student
+    form_class = StudentAddForm
+
+    #  Returns the page after success operation
+    def get_success_url(self):
+        # Just message
+        messages.success(self.request, u'Додавання студента успішне!')
+        return reverse('home')
+
+    # Custom the POST method
+    # for redirection to home if it's a click to 'cancel'
+    def post(self, request, *args, **kwargs):
+        if request.POST.get('cancel_button'):
+            messages.danger(self.request, u'Редагування студента вiдмiнено!')
+            return HttpResponseRedirect(reverse('home'))
+        else:
+            return super(StudentAddView, self).post(request, *args, **kwargs)
 
 
 class StudentUpdateForm(ModelForm):
@@ -180,18 +240,22 @@ class StudentUpdateForm(ModelForm):
                 ))
 
 
-class StudentUpdateView(UpdateView):
-    model = Student
-    template_name = 'students/students_edit.html'
+class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
+    model = Student  # Required. Our model we are working with
+    template_name = 'students/students_edit.html'  # Path to the template for edit student
     form_class = StudentUpdateForm
 
+    #  Returns the page after success operation
     def get_success_url(self):
+        # Just message
         messages.success(self.request, u'Редагування студента успішне!')
         return reverse('home')
 
+    # Custom the POST method
+    # for redirection to home if it's a click to 'cancel'
     def post(self, request, *args, **kwargs):
         if request.POST.get('cancel_button'):
-            messages.success(self.request, u'Редагування студента вiдмiнено!')
+            messages.danger(self.request, u'Редагування студента вiдмiнено!')
             return HttpResponseRedirect(reverse('home'))
         else:
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
@@ -204,7 +268,6 @@ class StudentDeleteView(DeleteView):
     def get_success_url(self):
         messages.info(self.request, u'Студента успiшно видалено!')
         return reverse('home')
-
 
 
 def students_journal(request, sid):
