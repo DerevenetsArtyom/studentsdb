@@ -18,15 +18,14 @@ from django.contrib import admin
 
 from .settings import MEDIA_ROOT, DEBUG
 
-from students.views.stud_view import StudentUpdateView, StudentDeleteView
-
+from students.views.stud_view import StudentUpdateView, StudentDeleteView, StudentAddView
 
 urlpatterns = patterns('',
 
     # Students urls
     url(r'^$', 'students.views.stud_view.students_list', name='home'),
 
-    url(r'^students/add/$', 'students.views.stud_view.students_add', name='students_add'),
+    url(r'^students/add/$', StudentAddView.as_view(), name='students_add'),
 
     url(r'^students/(?P<pk>\d+)/delete/$', StudentDeleteView.as_view(), name='students_delete'),
 
