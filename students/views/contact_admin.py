@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
 from django import forms
 from django.core.mail import send_mail
-from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.edit import FormView
+from django.contrib import messages
 
 # crispy_forms for front-end ( bootstrap)
 from crispy_forms.helper import FormHelper
@@ -42,7 +41,29 @@ class ContactForm(forms.Form):
         widget=forms.Textarea(attrs={'rows': 5, 'cols': 5}))
 
 
-#   FUNCTION VIEW FOR CONTACT ADMIN
+class ContactView(FormView):  # Use generic FormView
+    template_name = 'contact_admin/form.html'  # Set template
+    form_class = ContactForm  # Set form for showing
+
+    # Check if form is valid
+    def form_valid(self, form):
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        from_email = form.cleaned_data['from_email']
+        try:  # Try to send a message if data is valid
+            send_mail(subject, message, from_email, ['admin@gmail.com'])
+        except Exception:
+            messages.error(self.request, u'Сталась помилка при вiдправленнi.')
+        else:
+            messages.success(self.request, u'Повiдомлення успiшно вiдправлено')
+        return super(ContactView, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('contact_admin')
+
+
+'''
+# FUNCTION VIEW FOR CONTACT ADMIN
 def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':
@@ -69,10 +90,4 @@ def contact_admin(request):
     else:
         form = ContactForm()
     return render(request, 'contact_admin/form.html', {'form': form})
-
-'''
-class ContactView(FormView):
-    template_name = 'contact_admin/form.html'
-    form_class = ContactForm
-'''
-
+    '''
