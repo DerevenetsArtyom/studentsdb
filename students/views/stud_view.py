@@ -205,7 +205,8 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
 
-'''class StudentUpdateForm(ModelForm):
+'''# Form for editing based on Student model
+class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
         fields = ('last_name', 'first_name', 'middle_name', 'student_group',
@@ -237,29 +238,57 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
         self.helper.layout.append(FormActions(
                 Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
                 Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
-                ))'''
+                ))
+    '''
 
 
 class StudentUpdateFormByHand(forms.Form):
     last_name = forms.CharField()
     first_name = forms.CharField()
-    middle_name = forms.CharField()
+    middle_name = forms.CharField(required=False)
     student_group = forms.ModelChoiceField(queryset=None)
-    birthday = forms.DateTimeField()
-    photo = forms.FileField()
+    birthday = forms.DateField()
     ticket = forms.IntegerField()
-    notes = forms.CharField()
+    notes = forms.CharField(required=False)
 
     def __init__(self, *args, **kwargs):
-        super(StudentUpdateFormByHand, self).__init__(*args)
+        if kwargs.has_key('instance'):
+            kwargs.pop('instance')
+        super(StudentUpdateFormByHand, self).__init__(*args, **kwargs)
         self.fields['student_group'].queryset = Group.objects.all()
+
+        self.helper = FormHelper(self)
+
+        # set form tag attributes
+
+        self.helper.form_action = reverse('students_edit',
+            kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_method = 'POST'
+        self.helper.form_class = 'form-horizontal'
+
+        # set form field properties
+        self.helper.help_text_inline = True
+        self.helper.html5_required = True
+        self.helper.label_class = 'col-sm-2 control-label'
+        self.helper.field_class = 'col-sm-10'
+
+        # add buttons
+        self.helper.layout.append(FormActions(
+                Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
+                Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
+                ))
 
 
 class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
     model = Student  # Required. Our model we are working with
     template_name = 'students/students_edit.html'  # Path to the template for edit student
     form_class = StudentUpdateFormByHand
-    #fields = '__all__'
+
+    def get_initial(self):
+        # List of dict with object's data
+        for stud_data in Student.objects.values():
+            if stud_data['id'] == self.object.id:
+                return stud_data
 
     #  Returns the page after success operation
     def get_success_url(self):
@@ -271,7 +300,7 @@ class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
     # for redirection to home if it's a click to 'cancel'
     def post(self, request, *args, **kwargs):
         if request.POST.get('cancel_button'):
-            messages.danger(self.request, u'Редагування студента вiдмiнено!')
+            messages.error(self.request, u'Редагування студента вiдмiнено!')
             return HttpResponseRedirect(reverse('home'))
         else:
             return super(StudentUpdateView, self).post(request, *args, **kwargs)
