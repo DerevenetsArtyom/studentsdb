@@ -240,7 +240,7 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
                 ))'''
 
 
-class StudentUpdateFormByHang(forms.Form):
+class StudentUpdateFormByHand(forms.Form):
     last_name = forms.CharField()
     first_name = forms.CharField()
     middle_name = forms.CharField()
@@ -251,14 +251,14 @@ class StudentUpdateFormByHang(forms.Form):
     notes = forms.CharField()
 
     def __init__(self, *args, **kwargs):
-        super(StudentUpdateFormByHang, self).__init__(*args)
+        super(StudentUpdateFormByHand, self).__init__(*args)
         self.fields['student_group'].queryset = Group.objects.all()
 
 
 class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
     model = Student  # Required. Our model we are working with
     template_name = 'students/students_edit.html'  # Path to the template for edit student
-    form_class = StudentUpdateFormByHang
+    form_class = StudentUpdateFormByHand
     #fields = '__all__'
 
     #  Returns the page after success operation
