@@ -43,7 +43,7 @@ class ContactForm(forms.Form):
 
 
 #   FUNCTION VIEW FOR CONTACT ADMIN
-'''def contact_admin(request):
+def contact_admin(request):
     # check if form was posted
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -68,11 +68,11 @@ class ContactForm(forms.Form):
     # if a GET (or any other method) we'll create a blank form
     else:
         form = ContactForm()
-    return render(request, 'contact_admin/form.html', {'form': form})'''
+    return render(request, 'contact_admin/form.html', {'form': form})
 
-
+'''
 class ContactView(FormView):
     template_name = 'contact_admin/form.html'
     form_class = ContactForm
-
+'''
 
