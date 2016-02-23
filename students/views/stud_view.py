@@ -205,7 +205,7 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
 
-class StudentUpdateForm(ModelForm):
+'''class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
         fields = ('last_name', 'first_name', 'middle_name', 'student_group',
@@ -237,13 +237,29 @@ class StudentUpdateForm(ModelForm):
         self.helper.layout.append(FormActions(
                 Submit('add_button', u'Зберегти', css_class="btn btn-primary"),
                 Submit('cancel_button', u'Скасувати', css_class="btn btn-link"),
-                ))
+                ))'''
+
+
+class StudentUpdateFormByHang(forms.Form):
+    last_name = forms.CharField()
+    first_name = forms.CharField()
+    middle_name = forms.CharField()
+    student_group = forms.ModelChoiceField(queryset=None)
+    birthday = forms.DateTimeField()
+    photo = forms.FileField()
+    ticket = forms.IntegerField()
+    notes = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        super(StudentUpdateFormByHang, self).__init__(*args)
+        self.fields['student_group'].queryset = Group.objects.all()
 
 
 class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
     model = Student  # Required. Our model we are working with
     template_name = 'students/students_edit.html'  # Path to the template for edit student
-    form_class = StudentUpdateForm
+    form_class = StudentUpdateFormByHang
+    #fields = '__all__'
 
     #  Returns the page after success operation
     def get_success_url(self):
