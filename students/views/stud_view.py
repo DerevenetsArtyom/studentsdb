@@ -60,6 +60,7 @@ def students_list(request):
         {'students': students})
 
 
+# NOT ALREADY USE
 # Add student manually
 def students_add(request):
     # Was form posted?
@@ -165,14 +166,13 @@ class StudentAddForm(ModelForm):
 
         # set form tag attributes
 
-        # self.helper.form_action = reverse('students_add',
-        #     kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_action = reverse('students:students_add')
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
 
         # set form field properties
         self.helper.help_text_inline = True
-        self.helper.html5_required = True
+        self.helper.html5_required = False
         self.helper.label_class = 'col-sm-2 control-label'
         self.helper.field_class = 'col-sm-10'
 
@@ -199,13 +199,13 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
     # for redirection to home if it's a click to 'cancel'
     def post(self, request, *args, **kwargs):
         if request.POST.get('cancel_button'):
-            messages.danger(self.request, u'Редагування студента вiдмiнено!')
+            messages.error(self.request, u'Додавання студента вiдмiнено!')
             return HttpResponseRedirect(reverse('home'))
         else:
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
-
-'''# Form for editing based on Student model
+# Form for editing based on Student model (ModelForms)
+'''
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
@@ -246,7 +246,7 @@ class StudentUpdateFormByHand(forms.Form):
     last_name = forms.CharField()
     first_name = forms.CharField()
     middle_name = forms.CharField(required=False)
-    student_group = forms.ModelChoiceField(queryset=None)
+    student_group = forms.ModelChoiceField(queryset=Group.objects.all())
     birthday = forms.DateField()
     ticket = forms.IntegerField()
     notes = forms.CharField(required=False)
@@ -255,14 +255,14 @@ class StudentUpdateFormByHand(forms.Form):
         if kwargs.has_key('instance'):
             kwargs.pop('instance')
         super(StudentUpdateFormByHand, self).__init__(*args, **kwargs)
-        self.fields['student_group'].queryset = Group.objects.all()
+        #self.fields['student_group'].queryset = Group.objects.all()
 
         self.helper = FormHelper(self)
 
         # set form tag attributes
 
-        self.helper.form_action = reverse('students_edit',
-            kwargs={'pk': kwargs['instance'].id})
+        self.helper.form_action = reverse('students:students_edit',
+           kwargs={'pk': self.initial['id']})
         self.helper.form_method = 'POST'
         self.helper.form_class = 'form-horizontal'
 
@@ -286,9 +286,7 @@ class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
 
     def get_initial(self):
         # List of dict with object's data
-        for stud_data in Student.objects.values():
-            if stud_data['id'] == self.object.id:
-                return stud_data
+        return Student.objects.values().get(id=self.object.id)
 
     #  Returns the page after success operation
     def get_success_url(self):
@@ -317,4 +315,3 @@ class StudentDeleteView(DeleteView):
 
 def students_journal(request, sid):
     return HttpResponse('<h1> Student %s in journal</h1>' % sid)
-
