@@ -54,7 +54,7 @@
     {% for student in students %}
     <tr >
         <td  >{{ forloop.counter}}</td>
-        <td  ><a href="{% url "students_edit" student.id %}">{{ student.name }}</td>
+        <td  ><a href="{% url "students:students_edit" student.id %}">{{ student.name }}</td>
         <td  ><input type="checkbox"></td>
         <td  ><input type="checkbox" checked></td>
         <td  ><input type="checkbox" checked></td>

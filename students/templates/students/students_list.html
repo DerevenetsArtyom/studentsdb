@@ -13,7 +13,7 @@
 {% endblock title %}
 
 {% block content %}
-    <a href="{% url "students_add" %}" class="btn btn-primary">Додати Студента</a>
+    <a href="{% url "students:students_add" %}" class="btn btn-primary">Додати Студента</a>
 
         <!-- Start Students Listing -->
         <table class="table table-striped">
@@ -72,8 +72,8 @@
                       <img class="img-circle" src="{% static "img/default_user.png" %}" height="30" width="30"/>
                   </td>
               {% endif %}
-              <td><a href="{% url "students_edit" student.id %}">{{ student.last_name }}</td>
-              <td><a href="{% url "students_edit" student.id %}">{{ student.first_name }}</td>
+              <td><a href="{% url "students:students_edit" student.id %}">{{ student.last_name }}</td>
+              <td><a href="{% url "students:students_edit" student.id %}">{{ student.first_name }}</td>
               <td>{{ student.ticket }}</td>
               <td>
                 <div class="btn-group">
@@ -82,9 +82,9 @@
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="{% url "students_edit" student.id %}">Редагувати</a></li>
-                    <li><a href="{% url "students_journal" student.id %}">Відвідування</a></li>
-                    <li><a href="{% url "students_delete" student.id %}">Видалити</a></li>
+                    <li><a href="{% url "students:students_edit" student.id %}">Редагувати</a></li>
+                    <li><a href="{% url "students:students_journal" student.id %}">Відвідування</a></li>
+                    <li><a href="{% url "students:students_delete" student.id %}">Видалити</a></li>
                   </ul>
                 </div>
               </td>
