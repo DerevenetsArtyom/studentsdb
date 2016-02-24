@@ -251,16 +251,18 @@ class StudentUpdateFormByHand(forms.Form):
     ticket = forms.IntegerField()
     notes = forms.CharField(required=False)
 
+    def save(self):
+        data = self.cleaned_data
+        st = Student(**data)
+        st.save()
+
     def __init__(self, *args, **kwargs):
         if kwargs.has_key('instance'):
             kwargs.pop('instance')
         super(StudentUpdateFormByHand, self).__init__(*args, **kwargs)
-        #self.fields['student_group'].queryset = Group.objects.all()
-
         self.helper = FormHelper(self)
 
         # set form tag attributes
-
         self.helper.form_action = reverse('students:students_edit',
            kwargs={'pk': self.initial['id']})
         self.helper.form_method = 'POST'
@@ -285,8 +287,13 @@ class StudentUpdateView(UpdateView):  # inherits from generic UpdateView
     form_class = StudentUpdateFormByHand
 
     def get_initial(self):
-        # List of dict with object's data
-        return Student.objects.values().get(id=self.object.id)
+        # Get saved data for student in dict_format
+        stud_dict = Student.objects.values().get(id=self.object.id)
+        # Set group name of it's id
+        group_name_verbose = Group.objects.get(id=stud_dict['student_group_id'])
+        # Add to initial dict name of group and get it in form
+        stud_dict['student_group'] = group_name_verbose
+        return stud_dict
 
     #  Returns the page after success operation
     def get_success_url(self):
