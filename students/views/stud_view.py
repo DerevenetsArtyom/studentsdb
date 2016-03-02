@@ -59,7 +59,7 @@ def students_list(request):
         {'students': students})
 
 
-# Add student using ModelForm
+# Form for add new student using ModelForm
 class StudentAddForm(ModelForm):
     class Meta:
         model = Student
@@ -116,7 +116,7 @@ class StudentAddView(CreateView):  # inherits from generic CreateView
             return super(StudentAddView, self).post(request, *args, **kwargs)
 
 
-# Form for editing based on Student model (ModelForms)
+# Form for editing student
 class StudentUpdateForm(ModelForm):
     class Meta:
         model = Student
