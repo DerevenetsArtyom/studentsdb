@@ -19,25 +19,12 @@ class Group(models.Model):
     def __unicode__(self):
         if self.leader:
             return u"%s (%s %s)" % (self.title, self.leader.first_name, self.leader.last_name)
-        else: # there is no leader in group
+        else:  # there is no leader in group
             return u"%s" % self.title
 
-    title = models.CharField(
-        max_length=256,
-        blank=False,
-        verbose_name=u"Назва")
+    title = models.CharField(u"Назва", max_length=256, blank=False)
 
-    notes = models.TextField(
-        blank=True,
-        verbose_name=u"Додаткові нотатки")
+    notes = models.TextField(u"Додаткові нотатки", blank=True)
 
-    # One to One relationship
     # Indexing one student from Students model
-    leader = models.OneToOneField(
-        'Student',
-        verbose_name=u"Староста",
-        # Can be empty
-        blank=True,
-        null=True,
-        # Sets the null value if student deleted
-        on_delete=models.SET_NULL)
+    leader = models.OneToOneField('Student', verbose_name=u"Староста", blank=True, null=True, on_delete=models.SET_NULL)
